@@ -7,6 +7,10 @@ processors:
     fields: [modsecurity.transaction.server_id, modsecurity.transaction.host_ip, modsecurity.transaction.unique_id]
     target_field: "@metadata._id"
     ignore_missing: true
+- gsub:
+    field: modsecurity.transaction.time_stamp
+    pattern: "  "
+    replacement: " "
 - date:
     field: modsecurity.transaction.time_stamp
     target_field: '@timestamp'
