@@ -3,7 +3,7 @@ module_version: 1.0
 var:
   - name: paths
     default:
-      - /var/log/modsec/*/*/*
+      - /var/log/modsec/**
 
 ingest_pipeline: ingest/pipeline.yml
 input: config/audit.yml

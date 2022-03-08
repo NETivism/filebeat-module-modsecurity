@@ -11,7 +11,7 @@ processors:
     field: modsecurity.transaction.time_stamp
     target_field: '@timestamp'
     formats:
-    - EEE MMM d HH:mm:ss yyyy
+    - "E M d HH:mm:ss yyyy"
     on_failure:
     - append:
         field: error.message
@@ -57,8 +57,6 @@ processors:
     field: source.as.organization_name
     target_field: source.as.organization.name
     ignore_missing: true
-- drop_fields:
-    fields: ["message"]
 - set:
     field: event.kind
     value: "event"
