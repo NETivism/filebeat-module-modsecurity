@@ -8,7 +8,10 @@ ignore_older: 5m
 close_inactive: 1m
 scan_frequency: 30s
 processors:
+  - add_locale: ~
   - decode_json_fields:
       fields: [message]
       process_array: true
       target: "modsecurity"
+  - drop_fields:
+      fields: [message]

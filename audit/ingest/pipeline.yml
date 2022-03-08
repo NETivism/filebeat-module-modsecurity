@@ -16,6 +16,7 @@ processors:
     target_field: '@timestamp'
     formats:
     - "EEE MMM d HH:mm:ss yyyy"
+    timezone: "{{event.timezone}}"
     on_failure:
     - append:
         field: error.message
@@ -31,13 +32,14 @@ processors:
     value: "{{modsecurity.transaction.request.headers.host}}"
 - set:
     field: url.original
-    value: "{{modsecurity.transaction.request.headers.uri}}"
+    value: "{{modsecurity.transaction.request.uri}}"
 - set:
     field: http.request.method
-    value: "{{modsecurity.transaction.request.headers.method}}"
-- set:
-    field: http.request.status_code
-    value: "{{modsecurity.transaction.response.http_code}}"
+    value: "{{modsecurity.transaction.request.method}}"
+- convert:
+    field: modsecurity.transaction.response.http_code
+    type: long
+    target_field: http.response.status_code
 - set:
     field: http.request.referrer
     value: "{{modsecurity.transaction.request.headers.referrer}}"
