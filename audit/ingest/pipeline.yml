@@ -12,6 +12,9 @@ processors:
     target_field: '@timestamp'
     formats:
     - "E M d HH:mm:ss yyyy"
+    - "EEE MM dd HH:mm:ss yyyy"
+    - "EEE MM d HH:mm:ss yyyy"
+    - "EEE MM  d HH:mm:ss yyyy"
     on_failure:
     - append:
         field: error.message
