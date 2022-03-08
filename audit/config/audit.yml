@@ -1,0 +1,15 @@
+type: log
+paths:
+{{ range $i, $path := .paths }}
+ - {{$path}}
+{{ end }}
+exclude_files: [".gz$"]
+ignore_older: 5m
+close_inactive: 1m
+close_eof: true
+scan_frequency: 1m
+processors:
+  - decode_json_fields:
+      fields: [message]
+      process_array: true
+      target: "modsecurity"

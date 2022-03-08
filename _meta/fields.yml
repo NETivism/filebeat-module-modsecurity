@@ -1,0 +1,9 @@
+- key: modsecurity
+  title: "modsecurity"
+  description: >
+    modsecurity Module
+  fields:
+    - name: modsecurity
+      type: group
+      description: >
+      fields:

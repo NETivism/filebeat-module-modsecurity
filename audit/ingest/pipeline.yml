@@ -1,0 +1,75 @@
+description: Pipeline for parsing modsecurity audit log in JSON format
+processors:
+- rename:
+    field: '@timestamp'
+    target_field: event.created
+- fingerprint:
+    fields: [modsecurity.transaction.server_id, modsecurity.transaction.host_ip, modsecurity.transaction.unique_id]
+    target_field: "@metadata._id"
+    ignore_missing: true
+- date:
+    field: modsecurity.transaction.time_stamp
+    target_field: '@timestamp'
+    formats:
+    - EEE MMM d HH:mm:ss yyyy
+    on_failure:
+    - append:
+        field: error.message
+        value: '{{ _ingest.on_failure_message }}'
+- convert:
+    field: modsecurity.transaction.client_ip
+    type: ip
+- set:
+    field: source.ip
+    value: "{{modsecurity.transaction.client_ip}}"
+- set:
+    field: destination.domain
+    value: "{{modsecurity.transaction.request.headers.host}}"
+- set:
+    field: url.original
+    value: "{{modsecurity.transaction.request.headers.uri}}"
+- set:
+    field: http.request.method
+    value: "{{modsecurity.transaction.request.headers.method}}"
+- set:
+    field: http.request.status_code
+    value: "{{modsecurity.transaction.response.http_code}}"
+- set:
+    field: http.request.referrer
+    value: "{{modsecurity.transaction.request.headers.referrer}}"
+- geoip:                              
+    field: source.ip
+    target_field: source.geo 
+    ignore_missing: true 
+- geoip:
+    database_file: GeoLite2-ASN.mmdb
+    field: source.ip
+    target_field: source.as
+    properties:
+    - asn
+    - organization_name
+    ignore_missing: true
+- rename:
+    field: source.as.asn
+    target_field: source.as.number
+    ignore_missing: true
+- rename:
+    field: source.as.organization_name
+    target_field: source.as.organization.name
+    ignore_missing: true
+- drop_fields:
+    fields: ["message"]
+- set:
+    field: event.kind
+    value: "event"
+- append:
+    field: event.category
+    value: "threat"
+- append:
+    field: event.type
+    value: "indicator"
+
+on_failure:
+- set:
+    field: error.message
+    value: '{{ _ingest.on_failure_message }}'
