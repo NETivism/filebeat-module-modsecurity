@@ -1,4 +1,4 @@
-Writing and install filebeat module for modsecurity JSON audit log
+# Writing and install filebeat module for modsecurity JSON audit log
 
 - [1\. Module Create Hint](#1-module-create-hint)
     - [1.1 JSON Format Log Parsing](#11-json-format-log-parsing)
@@ -15,7 +15,7 @@ Writing and install filebeat module for modsecurity JSON audit log
 1.  Naming module (cannot duplicate with [here](https://github.com/elastic/beats/tree/main/filebeat/module) )
 2.  Naming the dataset inside module (eg. modsecurity -> audit )
 3.  Create yml files (check modules in references). You will have directory structure like this:
-    ![daa7ca6a2ad1d2439ddbd3426cc4eea3.png](../_resources/5f959d1abd0c4dddb34a7fb0cd6399fb.png)
+    ![5f959d1abd0c4dddb34a7fb0cd6399fb](https://user-images.githubusercontent.com/240131/157383336-1af32e3c-03f6-4f4f-bf48-173a72dfdd32.png)
 4.  Most setting should inside "dataset" config. In this case, it's `audit -> config -> audit.yml`
 
 ### 1.1 JSON Format Log Parsing
@@ -53,7 +53,7 @@ processors:
 The above setting will decode original event (which saved in field "`message`") into JSON, and set to variable `modsecurity` for further use.
 
 **NOTE that**, the whole JSON structure above will also import to Elasticsearch fields mapping of filebeat automatically. After this config, when you setup filebeat, fields mapping will like this in kibana:
-![056b78921ebd130e866525b7d2b6a3b2.png](../_resources/2efab4ea37df4ff6896a00fa8412ce3d.png)
+![2efab4ea37df4ff6896a00fa8412ce3d](https://user-images.githubusercontent.com/240131/157383385-559a008a-2f3d-437f-a60e-41d7c692a84d.png)
 
 You should also check document of [decode\_json\_fields](https://www.elastic.co/guide/en/beats/filebeat/current/decode-json-fields.html).
 
@@ -184,10 +184,10 @@ sudo filebeat setup --pipelines
 ```
 
 After execute above command, you will see ingest pipeline in Kibana "Stack Management -> Ingest Node Pipelines":
-![c99b5610ad2ae3d842f3e966c34b4ba3.png](../_resources/f59bf11ab7574532a40395c891ba32ba.png)
+![f59bf11ab7574532a40395c891ba32ba](https://user-images.githubusercontent.com/240131/157383424-13785cb5-1f6e-4dae-b32c-4d5e2f0cf37b.png)
 
 Click the line above, you can see ingest pipeline defined in module now imported.
-![8c584a98832f49ee535a2ff3c043e220.png](../_resources/fc68d84546c44216a04ef0f9b30fb68f.png)
+![fc68d84546c44216a04ef0f9b30fb68f](https://user-images.githubusercontent.com/240131/157383473-4d7898d6-5faf-4368-bc9a-52f4d3dee013.png)
 
 You can always delete the ingest pipeline definition above and re-import by command `filebeat setup --pipelines`.
 
@@ -236,16 +236,17 @@ GET filebeat-*/_search
 ```
 
 And the query result will have correct structure of your JSON data and you defined in ingest pipeline:
-![aecb51d7999d107044c1eab71f4c8613.png](../_resources/8704d35ccd57444e860db518e06b609e.png)
+![8704d35ccd57444e860db518e06b609e](https://user-images.githubusercontent.com/240131/157383530-ea4e01c8-bb31-4f31-b15c-0e7550154a14.png)
 
 **In Kibana**, you should check your filebeat index have correct fields mapping in "Stack Management -> Index Patterns"
-![056b78921ebd130e866525b7d2b6a3b2.png](../_resources/2efab4ea37df4ff6896a00fa8412ce3d.png)
+![2efab4ea37df4ff6896a00fa8412ce3d](https://user-images.githubusercontent.com/240131/157383572-33e217b8-d445-4d34-844d-d7bb8eb6bb20.png)
 
 Adn "Index Management -> \[your current index\] -> Mappings"
-![e53216a3d568292ea9a0687b62b368d0.png](../_resources/9091ca55a89a44b8af8ff9e32c493ef7.png)
+![9091ca55a89a44b8af8ff9e32c493ef7](https://user-images.githubusercontent.com/240131/157383606-9cffc542-b1d2-476f-b24d-f2c3ed05809e.png)
+
 
 **In Kibana Discover**, you can now search event with filter `event.module: modsecurity`
-![9f58f9ef17539c126d190f95ba903a1d.png](../_resources/86b90c16983f4f94bb26a222ea8dd885.png)
+![86b90c16983f4f94bb26a222ea8dd885](https://user-images.githubusercontent.com/240131/157383638-cea44d81-45df-477e-8419-879c1c31d0c3.png)
 
 ### 3.2 Complete the module setup
 
