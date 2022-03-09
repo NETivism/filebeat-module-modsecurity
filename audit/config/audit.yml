@@ -4,9 +4,12 @@ paths:
  - {{$path}}
 {{ end }}
 exclude_files: [".gz$"]
+# See log input doc in https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-input-log.html
 ignore_older: 5m
+close_eof: true
 close_inactive: 1m
 scan_frequency: 30s
+# See processors doc in https://www.elastic.co/guide/en/beats/filebeat/current/defining-processors.html
 processors:
   - add_locale: ~
   - decode_json_fields:
